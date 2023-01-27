@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { AnimeDto, GetCurrentAnimeRawDto } from './dtos';
 import { requestOptions } from './interfaces';
 import { anilistUrl, currentAnimeQuery, pageQuery } from './queries';
 
@@ -17,7 +18,7 @@ export class AppService {
     }
   }
 
-  async getAnime(userName = 'talzxc', page = 1): Promise<JSON> {
+  async getCurrentAnime(userName = 'talzxc', page = 1): Promise<AnimeDto[]> {
     const variables = {
       userName,
       page,
@@ -25,7 +26,7 @@ export class AppService {
     const options = this.requestOptions(currentAnimeQuery, variables);
     try {
       const response = await axios(options);
-      return response.data;
+      return GetCurrentAnimeRawDto.toAnimeDtoList(response.data);
     } catch (error) {
       return error;
     }

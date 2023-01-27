@@ -1,6 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { AppService } from './app.service';
-import { PAGE, USERNAME } from './constants';
+import { USERNAME } from './constants';
+import { AnimeDto } from './dtos';
 
 @Controller()
 export class AppController {
@@ -11,11 +12,10 @@ export class AppController {
     return await this.appService.getMydata();
   }
 
-  @Get(`anime/:${USERNAME}/:${PAGE}`)
-  public async anime(
-    @Param(USERNAME) userName: string,
-    @Param(PAGE) page: number,
-  ): Promise<JSON> {
-    return await this.appService.getAnime(userName, page);
+  @Get(`anime/:${USERNAME}`)
+  public async anime(@Param(USERNAME) userName: string): Promise<AnimeDto[]> {
+    const x = await this.appService.getCurrentAnime(userName);
+    console.log(x);
+    return x;
   }
 }

@@ -36,8 +36,12 @@ export const currentAnimeQuery = `query($userName: String, $page: Int){
     mediaList(userName: $userName, type: ANIME, status: CURRENT) {
         progress
         media {
+            episodes
+            nextAiringEpisode {
+                episode
+            }
             title {
-                userPreferred
+                native
             }
         }
     }
