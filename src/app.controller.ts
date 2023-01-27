@@ -15,7 +15,6 @@ export class AppController {
   @Get(`anime/:${USERNAME}`)
   public async anime(@Param(USERNAME) userName: string): Promise<AnimeDto[]> {
     const x = await this.appService.getCurrentAnime(userName);
-    console.log(x);
     return x;
   }
 }
