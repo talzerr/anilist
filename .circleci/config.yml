@@ -1,6 +1,8 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
+orbs:
+  node: circleci/node@5.1.0
 
 defaults: &defaults
   working_directory: ~/app
@@ -13,6 +15,7 @@ jobs:
   dependencies:
     <<: *defaults
     steps:
+      - node/install
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
@@ -21,7 +24,7 @@ jobs:
           command: echo -e $NPMRC > ~/.npmrc
       - run:
           name: Install dependencies
-          command: npm i
+          command: "[ -d node_modules ] || npm i"
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -29,6 +32,7 @@ jobs:
   test:
     <<: *defaults
     steps:
+      - node/install
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
@@ -37,6 +41,11 @@ jobs:
           command: npm t
       - store_test_results:
           path: test-results
+  lint:
+    <<: *defaults
+    steps:
+      - node/install
+      - checkout
       - run:
           name: Lint
           command: npm run lint
@@ -48,6 +57,10 @@ workflows:
     jobs:
       - dependencies:
           context: org-global
+      - lint:
+          context: org-global
+          requires:
+            - dependencies
       - test:
           context: org-global
           requires:
