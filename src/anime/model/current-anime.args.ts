@@ -1,7 +1,7 @@
-import { ArgsType, Field, Int } from '@nestjs/graphql';
+import { ArgsType, Field } from '@nestjs/graphql';
 
 @ArgsType()
 export class CurrentAnimeArgs {
-  @Field(type => String)
+  @Field(() => String)
   username = 'talzxc';
 }
