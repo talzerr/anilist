@@ -25,10 +25,15 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-  lint:
+  test:
     <<: *defaults
     steps:
       - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Test code
+          command: npm t
       - run:
           name: Lint
           command: npm run lint
@@ -38,7 +43,9 @@ jobs:
 workflows:
   integration:
     jobs:
-      - dependencies
-      - lint:
-        requires:
-          - dependencies
+      - dependencies:
+          context: org-global
+      - test:
+          context: org-global
+          requires:
+            - dependencies
