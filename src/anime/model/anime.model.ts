@@ -1,8 +1,8 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
-@ObjectType({ description: 'anime ' })
+@ObjectType({ description: 'anime' })
 export class Anime {
-  @Field((type) => ID)
+  @Field(() => ID)
   id: number;
 
   @Field()
@@ -12,26 +12,26 @@ export class Anime {
   score?: number;
 }
 
-@ObjectType({ description: 'currentAnime ' })
+@ObjectType({ description: 'currentAnime' })
 export class currentAnime {
-  @Field((type) => ID)
+  @Field(() => ID)
   id: number;
 
   @Field()
   title: string;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   episodesBehind?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   episodesLeft?: number;
 
-  @Field()
+  @Field(() => Int)
   progress: number;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   totalEpisodes?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   nextEpisode?: number;
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { DocumentNode } from 'graphql';
 import { requestOptions } from 'src/interfaces';
 import { currentAnimeQuery, pageQuery, anilistUrl } from 'src/queries';
 import { GetCurrentAnimeRawDto } from './dtos';

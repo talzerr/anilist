@@ -1,6 +1,7 @@
 export const anilistUrl = 'https://graphql.anilist.co';
 
-export const animeQuery = `query($id: Int) {
+export const animeQuery = `#graphql
+  query ($id: Int) {
     Media(id: $id, type: ANIME) {
       id
       title {
@@ -9,41 +10,46 @@ export const animeQuery = `query($id: Int) {
         native
       }
     }
-}`;
+  }
+`;
 
-export const pageQuery = `query($userName: String, $type: MediaType, $page: Int){
+export const pageQuery = `#graphql
+  query ($userName: String, $type: MediaType, $page: Int) {
     Page(page: $page) {
-        pageInfo {
-            currentPage
-        }
-    mediaList(userName: $userName, type: $type) {
-        progress,
-        score,
+      pageInfo {
+        currentPage
+      }
+      mediaList(userName: $userName, type: $type) {
+        progress
+        score
         media {
-            title {
-                userPreferred
-            }
+          title {
+            userPreferred
+          }
         }
+      }
     }
-    }
-}`;
+  }
+`;
 
-export const currentAnimeQuery = `query($userName: String, $page: Int){
+export const currentAnimeQuery = `#graphql
+  query ($userName: String, $page: Int) {
     Page(page: $page) {
-        pageInfo {
-            currentPage
-        }
-    mediaList(userName: $userName, type: ANIME, status: CURRENT) {
+      pageInfo {
+        currentPage
+      }
+      mediaList(userName: $userName, type: ANIME, status: CURRENT) {
         progress
         media {
-            episodes
-            nextAiringEpisode {
-                episode
-            }
-            title {
-                native
-            }
+          episodes
+          nextAiringEpisode {
+            episode
+          }
+          title {
+            native
+          }
         }
+      }
     }
-    }
-}`;
+  }
+`;
