@@ -9,17 +9,22 @@ defaults: &defaults
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  dependencies:
     <<: *defaults
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: Set npmrc credentials
+          command: echo -e $NPMRC > ~/.npmrc
+      - run:
+          name: Install dependencies
+          command: npm i
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
   lint:
     <<: *defaults
     steps:
@@ -31,9 +36,9 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  integration:
     jobs:
-      - say-hello
-  lint:
-    jobs:
-      - lint
+      - dependencies
+      - lint:
+        requires:
+          - dependencies
