@@ -1,0 +1,19 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""currentAnime """
+type currentAnime {
+  id: ID!
+  title: String!
+  episodesBehind: Float
+  episodesLeft: Float
+  progress: Float!
+  totalEpisodes: Float
+  nextEpisode: Float
+}
+
+type Query {
+  sayHello: String!
+  CurrentAnime(username: String!): [currentAnime!]!
+}
