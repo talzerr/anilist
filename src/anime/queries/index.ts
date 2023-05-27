@@ -37,12 +37,29 @@ export const currentAnimeQuery = `#graphql
         currentPage
       }
       mediaList(userName: $userName, type: ANIME, status: CURRENT) {
-        progress
+        
         media {
-          episodes
-          nextAiringEpisode {
-            episode
           }
+          title {
+            native
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const completedAnimeQuery = `#graphql
+  query ($userName: String, $page: Int) {
+    Page(page: $page) {
+      pageInfo {
+        currentPage
+        hasNextPage
+      }
+      mediaList(userName: $userName, type: ANIME, status: COMPLETED) {
+        mediaId
+        score
+        media {
           title {
             native
           }

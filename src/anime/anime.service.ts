@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { currentAnimeQuery, pageQuery } from 'src/anime/queries';
 import { GetCurrentAnimeRawDto } from './dtos';
-import { currentAnime } from './model/anime.model';
+import { Anime, CurrentAnime } from './model/anime.model';
 import { DEFAULT_ANILIST_OPTIONS } from './constants';
+import { completedAnimeQuery, currentAnimeQuery } from './queries';
 
 @Injectable()
 export class AnimeService {
   public async getCurrentAnime(
     username = 'talzxc',
     page = 1,
-  ): Promise<currentAnime[]> {
+  ): Promise<CurrentAnime[]> {
     const queryData = {
       query: currentAnimeQuery,
       variables: {
@@ -32,24 +32,36 @@ export class AnimeService {
     }
   }
 
-  public async getCompletedAnime(username = 'talzxc'): Promise<currentAnime[]> {
+  public async getCompletedAnime(username = 'talzxc'): Promise<Anime[]> {
+    let animeList: Anime[] = [];
+    let hasNextPage = true;
     const queryData = {
-      query: pageQuery,
+      query: completedAnimeQuery,
       variables: {
         userName: username,
+        page: 0,
       },
     };
-    const options = {
-      ...DEFAULT_ANILIST_OPTIONS,
-      data: queryData,
-    };
-    try {
-      const response = await axios(options);
-      return response.data;
-    } catch (error) {
-      throw new Error(
-        `Error in fetching airing anime [${(error as Error).message}]`,
-      );
+    while (hasNextPage) {
+      queryData.variables.page += 1;
+
+      const options = {
+        ...DEFAULT_ANILIST_OPTIONS,
+        data: queryData,
+      };
+
+      try {
+        const response = await axios(options);
+        animeList = animeList.concat(
+          GetCurrentAnimeRawDto.toAnimeList(response.data),
+        );
+        hasNextPage = response.data.data.Page.pageInfo.hasNextPage;
+      } catch (error) {
+        throw new Error(
+          `Error in fetching airing anime [${(error as Error).message}]`,
+        );
+      }
     }
+    return animeList;
   }
 }

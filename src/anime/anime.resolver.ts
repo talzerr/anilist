@@ -1,8 +1,8 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { AnimeService } from './anime.service';
-import { currentAnime } from './model/anime.model';
+import { Anime, CurrentAnime } from './model/anime.model';
 
-@Resolver(() => currentAnime)
+@Resolver(() => CurrentAnime)
 export class AnimeResolver {
   constructor(private readonly animeSerivce: AnimeService) {}
 
@@ -11,10 +11,17 @@ export class AnimeResolver {
     return 'Hello World!';
   }
 
-  @Query(() => [currentAnime])
+  @Query(() => [CurrentAnime])
   CurrentAnime(
     @Args('username', { defaultValue: 'talzxc' }) username: string,
-  ): Promise<currentAnime[]> {
+  ): Promise<CurrentAnime[]> {
     return this.animeSerivce.getCurrentAnime(username);
+  }
+
+  @Query(() => [Anime])
+  GetUsersCompletedAnime(
+    @Args('username', { defaultValue: 'talzxc' }) username: string,
+  ): Promise<Anime[]> {
+    return this.animeSerivce.getCompletedAnime(username);
   }
 }

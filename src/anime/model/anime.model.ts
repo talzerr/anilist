@@ -13,7 +13,7 @@ export class Anime {
 }
 
 @ObjectType({ description: 'currentAnime' })
-export class currentAnime {
+export class CurrentAnime {
   @Field(() => ID)
   id: number;
 

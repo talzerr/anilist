@@ -2,8 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""anime"""
+type Anime {
+  id: ID!
+  title: String!
+  score: Float!
+}
+
 """currentAnime"""
-type currentAnime {
+type CurrentAnime {
   id: ID!
   title: String!
   episodesBehind: Int
@@ -15,5 +22,6 @@ type currentAnime {
 
 type Query {
   sayHello: String!
-  CurrentAnime(username: String! = "talzxc"): [currentAnime!]!
+  CurrentAnime(username: String! = "talzxc"): [CurrentAnime!]!
+  GetUsersCompletedAnime(username: String! = "talzxc"): [Anime!]!
 }

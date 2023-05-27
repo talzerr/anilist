@@ -1,4 +1,4 @@
-import { currentAnime } from '../model/anime.model';
+import { Anime, CurrentAnime } from '../model/anime.model';
 
 export class GetCurrentAnimeRawDto {
   data: {
@@ -10,6 +10,7 @@ export class GetCurrentAnimeRawDto {
         {
           progress: number;
           mediaId: number;
+          score: number;
           media: {
             episodes?: number;
             nextAiringEpisode?: {
@@ -24,7 +25,7 @@ export class GetCurrentAnimeRawDto {
     };
   };
 
-  static toCurrentAnimeDtoList(raw: GetCurrentAnimeRawDto): currentAnime[] {
+  static toCurrentAnimeDtoList(raw: GetCurrentAnimeRawDto): CurrentAnime[] {
     const animeList = raw.data.Page.mediaList;
     return animeList.map((anime) => {
       return {
@@ -57,6 +58,17 @@ export class GetCurrentAnimeRawDto {
         progress: anime.progress,
         totalEpisodes: anime.media.episodes || undefined,
         nextEpisode: anime.media.nextAiringEpisode?.episode || undefined,
+      };
+    });
+  }
+
+  static toAnimeList(raw: GetCurrentAnimeRawDto): Anime[] {
+    const animeList = raw.data.Page.mediaList;
+    return animeList.map((anime) => {
+      return {
+        id: anime.mediaId,
+        title: anime.media.title.native,
+        score: anime.score,
       };
     });
   }
