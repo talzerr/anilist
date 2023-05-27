@@ -1,5 +1,3 @@
-export const anilistUrl = 'https://graphql.anilist.co';
-
 export const animeQuery = `#graphql
   query ($id: Int) {
     Media(id: $id, type: ANIME) {

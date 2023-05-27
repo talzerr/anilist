@@ -1,21 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { requestOptions } from 'src/interfaces';
-import { currentAnimeQuery, pageQuery, anilistUrl } from 'src/queries';
+import { currentAnimeQuery, pageQuery } from 'src/anime/queries';
 import { GetCurrentAnimeRawDto } from './dtos';
 import { currentAnime } from './model/anime.model';
+import { DEFAULT_ANILIST_OPTIONS } from './constants';
 
 @Injectable()
 export class AnimeService {
   public async getCurrentAnime(
-    userName = 'talzxc',
+    username = 'talzxc',
     page = 1,
   ): Promise<currentAnime[]> {
-    const variables = {
-      userName,
-      page,
+    const queryData = {
+      query: currentAnimeQuery,
+      variables: {
+        userName: username,
+        page,
+      },
     };
-    const options = this.requestOptions(currentAnimeQuery, variables);
+    const options = {
+      ...DEFAULT_ANILIST_OPTIONS,
+      data: queryData,
+    };
     try {
       const response = await axios(options);
       return GetCurrentAnimeRawDto.toCurrentAnimeDtoList(response.data);
@@ -26,11 +32,17 @@ export class AnimeService {
     }
   }
 
-  public async getCompletedAnime(userName = 'talzxc'): Promise<currentAnime[]> {
-    const variables = {
-      userName,
+  public async getCompletedAnime(username = 'talzxc'): Promise<currentAnime[]> {
+    const queryData = {
+      query: pageQuery,
+      variables: {
+        userName: username,
+      },
     };
-    const options = this.requestOptions(pageQuery, variables);
+    const options = {
+      ...DEFAULT_ANILIST_OPTIONS,
+      data: queryData,
+    };
     try {
       const response = await axios(options);
       return response.data;
@@ -39,17 +51,5 @@ export class AnimeService {
         `Error in fetching airing anime [${(error as Error).message}]`,
       );
     }
-  }
-
-  private requestOptions(query: string, variables: any): requestOptions {
-    return {
-      url: anilistUrl,
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        accept: 'application/json',
-      },
-      data: { query: query, variables: variables },
-    };
   }
 }

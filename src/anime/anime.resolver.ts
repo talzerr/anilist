@@ -17,4 +17,5 @@ export class AnimeResolver {
   ): Promise<currentAnime[]> {
     return this.animeSerivce.getCurrentAnime(username);
   }
+  
 }
